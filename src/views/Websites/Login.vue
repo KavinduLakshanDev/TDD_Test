@@ -27,6 +27,8 @@
    
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
+
 
 export default {
   data() {
@@ -40,25 +42,40 @@ export default {
     };
   },
   methods: {
-    loginUser() {
-      axios
-        .post('http://127.0.0.1:8000/api/login', this.user)
-        .then((response) => {
-          // Handle successful user login
-          // You can redirect the admin or perform other actions here
-          // this.$router.push('/website');
+  loginUser() {
+    axios
+      .post('http://127.0.0.1:8000/api/login', this.user)
+      .then((response) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Login Successful',
+          text: 'You have successfully logged in!',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          
           this.$router.push({
             name: 'WebsiteIndex',
-            params: { email: this.user.email },
+            params: { email: this.user.email }
           });
-        })
-        .catch((error) => {
-          this.errorMessage = 'Email and/or password error';
-          console.error(error);
         });
-    },
-    
-  },
+      })
+      .catch((error) => {
+        
+        this.errorMessage = 'Email and/or password error';
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Login Failed',
+          text: 'Invalid email and/or password. Please try again.',
+          confirmButtonColor: '#d33',
+          confirmButtonText: 'OK'
+        });
+        console.error(error);
+      });
+  }
+}
+
 };
 </script>
    
